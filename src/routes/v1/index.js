@@ -1,5 +1,11 @@
-/**
- * Updated by trungquandev.com's author on August 17 2023
- * YouTube: https://youtube.com/@trungquandev
- * "A bit of fragrance clings to the hand that gives flowers!"
- */
+import express from 'express';
+
+import UserRouter from '~/routes/v1/userRouter.js';
+import AuthRouter from '~/routes/v1/authRoute.js';
+
+const Router = express.Router();
+
+Router.use('/users', UserRouter);
+Router.use('/auth', AuthRouter);
+
+export default Router;
