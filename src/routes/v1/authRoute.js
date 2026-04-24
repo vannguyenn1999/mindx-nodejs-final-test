@@ -1,13 +1,13 @@
 
 import express from 'express';
-import { AuthValidate } from '~/validations/authValidation';
+import { VALIDATIONS } from '~/validations/Validation';
 import { AuthController } from '~/controllers/authController';
 
-const AuthRouter = express.Router();
+const UserRouter = express.Router();
 
-AuthRouter.post('/login', AuthValidate.login, AuthController.login);
-AuthRouter.post('/register', AuthValidate.register, AuthController.register);
-AuthRouter.get('/profile', AuthController.getProfile);
+UserRouter.post('/login', VALIDATIONS.login, AuthController.login);
+UserRouter.post('/register', VALIDATIONS.register, AuthController.register);
+UserRouter.get('/profile', AuthController.getProfile);
 
 
-export default AuthRouter;
+export default UserRouter;

@@ -2,13 +2,12 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 import {ENV} from '~/config/environment.js'
-import UserModel from '~/models/authModel.js'
+import UserModel from '~/models/userModel.js'
 
 const checkAuthorization = (req, res, next) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
 
-        console.log(token)
         if (!token) {
             return res.status(401).json({ message: 'No token provided' });
         }
@@ -23,6 +22,17 @@ const checkAuthorization = (req, res, next) => {
         next(error)
     }
     
+};
+
+const checkAdmin = (req, res, next) => {
+    try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+        next();
+    } catch (error) {
+        next(error)
+    }
 };
 
 const login = async (req, res , next) => {
@@ -41,7 +51,7 @@ const login = async (req, res , next) => {
         }
         
         // Tạo token JWT
-        const token = jwt.sign({ id: user._id , email: user.email , name : user.name }, ENV.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id , email: user.email , name : user.name , role: user.role }, ENV.JWT_SECRET, { expiresIn: '1h' });
         res.status(200).json({ token });
     } catch (error) {
         next(error);
@@ -58,8 +68,8 @@ const register = async (req, res , next) => {
         }
         // Hash mật khẩu
         const hashedPassword = await bcrypt.hash(password, 10);
-        // Tạo người dùng mới
-        const newUser = new UserModel({ email, password: hashedPassword, name });
+        // Tạo người dùng mới (mặc định role là 'user')
+        const newUser = new UserModel({ email, password: hashedPassword, name , role: 'user' });
         await newUser.save();
         res.status(201).json({ status: 'success', message: 'User registered successfully' });
     } catch (error) {
@@ -80,6 +90,7 @@ const getProfile = async (req, res , next) => {
             delete decoded.iat
             delete decoded.exp
             delete decoded.id
+            delete decoded.role
             
             res.status(200).json({ user: decoded }); // Trả về thông tin người dùng
         } catch (error) {
@@ -93,6 +104,7 @@ const getProfile = async (req, res , next) => {
 
 export const AuthController = {
     checkAuthorization,
+    checkAdmin,
     login,
     register,
     getProfile
