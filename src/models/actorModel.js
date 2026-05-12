@@ -1,44 +1,50 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const actorSchema = new mongoose.Schema({
+const actorSchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: true,
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
     info: {
-        type: String,
-        required: false,
-        trim: true
+      type: String,
+      required: false,
+      trim: true,
     },
-    slug : {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true
+    age: {
+      type: Number,
+      required: false,
     },
-    image : {
-        type: String,
-        required: false,
-        trim: true
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
     },
-    gender : {
-        type: String,
-        enum: ['male', 'female', 'other'],
-        required: false
+    image: {
+      type: String,
+      required: false,
+      trim: true,
     },
-    country : {
-        type: String,
-        required: false,
-        trim: true
+    gender: {
+      type: String,
+      enum: ['Male', 'Female', 'Other'],
+      required: false,
     },
-    dayOfBirth : {
-        type: Date,
-        required: false
-    }
+    country: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    dayOfBirth: {
+      type: Date,
+      required: false,
+    },
+  },
+  { timestamps: true },
+);
 
-}, { timestamps: true });
-
-const ActorModel = mongoose.model('Actor', actorSchema)
-export default ActorModel
+const ActorModel = mongoose.model('Actor', actorSchema);
+export default ActorModel;

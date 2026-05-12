@@ -1,13 +1,14 @@
-
 import express from 'express';
-import { StatusCodes } from 'http-status-codes';
 
+import { UserController } from '~/controllers/userController.js';
+import { AuthController } from '~/controllers/authController.js';
 
 const UserRouter = express.Router();
 
-UserRouter.get('/', (req, res) => {
-    res.status(StatusCodes.OK).json({ message: 'Hello, World!' });
-})
+const adminAuth = [AuthController.checkAuthorization, AuthController.checkAdmin];
+
+UserRouter.route('/').get(adminAuth , UserController.getAllUsers)
+UserRouter.route('/:id').get(adminAuth , UserController.getAllUsers).put(adminAuth , UserController.changeRoleUser)
 
 
 export default UserRouter;

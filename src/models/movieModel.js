@@ -1,71 +1,76 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-
-const movieSchema = new mongoose.Schema({
+const movieSchema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        required: true,
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
     imdbRating: {
-        type: Number,
-        required: false,
-        default:5.0
+      type: Number,
+      required: false,
+      default: 5.0,
     },
     duration: {
-        type: Number,
-        required: false
+      type: Number,
+      required: false,
     },
     slug: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
     },
 
     image: {
-        type: String,
-        required: false,
-        trim: true
+      type: String,
+      required: false,
+      trim: true,
     },
 
-    image_thumb : {
-        type: String,
-        required: false,
-        trim: true
+    image_thumb: {
+      type: String,
+      required: false,
+      trim: true,
     },
 
     releaseDate: {
-        type: Date,
-        required: false
+      type: Date,
+      required: false,
     },
-    
+
     info: {
-        type: String,
-        required: false,
-        trim: true
+      type: String,
+      required: false,
+      trim: true,
     },
-    
+
     releaseDate: {
-        type: Date,
-        required: false
+      type: Date,
+      required: false,
     },
-    actors: [{
+    actors: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Actor'}],
+        ref: 'Actor',
+      },
+    ],
 
     country: {
-        type: String,
-        required: false,
-        trim: true
+      type: String,
+      required: false,
+      trim: true,
     },
     link: {
-        type: String,
-        required: false,
-        trim: true
-    }
-}, { timestamps: true });
+      type: String,
+      required: false,
+      trim: true,
+    },
+  },
+  { timestamps: true },
+);
 
-const MovieModel = mongoose.model('Movie', movieSchema)
-export default MovieModel
+const MovieModel = mongoose.model('Movie', movieSchema);
+export default MovieModel;

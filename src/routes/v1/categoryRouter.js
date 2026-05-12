@@ -6,31 +6,17 @@ import { AuthController } from '~/controllers/authController.js';
 const CategoryRouter = express.Router();
 
 // Common middleware for admin operations
-const adminAuth = [
-    AuthController.checkAuthorization,
-    AuthController.checkAdmin
-];
+const adminAuth = [AuthController.checkAuthorization, AuthController.checkAdmin];
 
 // GET all categories and POST new category
 CategoryRouter.route('/')
-    .get(CategoryController.getAllCategories)
-    .post(
-        ...adminAuth,
-        CategoryValidation.categoryValidation,
-        CategoryController.createCategory
-    );
+  .get(CategoryController.getAllCategories)
+  .post(...adminAuth, CategoryValidation.categoryValidation, CategoryController.createCategory);
 
 // GET, PUT, DELETE specific category
-CategoryRouter.route('/:slug')
-    .get(CategoryController.getCategoryById)
-    .put(
-        ...adminAuth,
-        CategoryValidation.categoryValidation,
-        CategoryController.updateCategory
-    )
-    .delete(
-        ...adminAuth,
-        CategoryController.deleteCategory
-    );
+CategoryRouter.route('/:id')
+  .get(CategoryController.getCategoryById)
+  .put(...adminAuth, CategoryValidation.categoryValidation, CategoryController.updateCategory)
+  .delete(...adminAuth, CategoryController.deleteCategory);
 
 export default CategoryRouter;

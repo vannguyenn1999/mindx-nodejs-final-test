@@ -1,27 +1,38 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true // Nên thêm để tránh trùng lặp email hoa/thường
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true, // Nên thêm để tránh trùng lặp email hoa/thường
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: false,
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    refreshToken: {
+      type: String,
+      default: null,
+    },
   },
-  password: {
-    type: String,
-    required: true
-  },
-  name : {
-    type: String,
-    required: false
-  },
-  role :{
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
-  }
-}, { timestamps: true });
+  { timestamps: true },
+);
 
-const UserModel = mongoose.model('User', userSchema)
+const UserModel = mongoose.model('User', userSchema);
 
-export default UserModel
+export default UserModel;
