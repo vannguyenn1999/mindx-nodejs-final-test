@@ -27,7 +27,8 @@ const getAllCategories = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-    const categories = await CategoryModel.find({name : { $regex: search, $options: 'i' }}).skip(skip).limit(limit);
+    const slug = slugify(search)
+    const categories = await CategoryModel.find({slug : { $regex: slug, $options: 'i' }}).skip(skip).limit(limit);
     const totalCategories = await CategoryModel.countDocuments();
     const totalPages = Math.ceil(totalCategories / limit);
 
@@ -48,8 +49,8 @@ const getAllCategories = async (req, res, next) => {
 
 const getCategoryById = async (req, res, next) => {
   try {
-    const { slug } = req.params;
-    const category = await CategoryModel.findOne({ slug });
+    const { id } = req.params;
+    const category = await CategoryModel.findById(id);
     if (!category) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Danh mục không tồn tại !');
     }
@@ -64,10 +65,10 @@ const getCategoryById = async (req, res, next) => {
 
 const updateCategory = async (req, res, next) => {
   try {
-    const { slug } = req.params;
+    const { id } = req.params;
     const { name } = req.body;
-    const updatedCategory = await CategoryModel.findOneAndUpdate(
-      { slug },
+    const updatedCategory = await CategoryModel.findByIdAndUpdate(
+      id,
       { name, slug: `${slugify(name)}-${randomStringSecure()}` },
       { returnDocument: 'after', runValidators: true },
     );

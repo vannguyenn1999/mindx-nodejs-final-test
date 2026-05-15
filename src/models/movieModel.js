@@ -7,13 +7,23 @@ const movieSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    imagePublicId: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    imageThumbPublicId: {
+      type: String,
+      required: false,
+      trim: true,
+    },
     imdbRating: {
       type: Number,
       required: false,
       default: 5.0,
     },
     duration: {
-      type: Number,
+      type: String,
       required: false,
     },
     slug: {
@@ -34,11 +44,6 @@ const movieSchema = new mongoose.Schema(
       type: String,
       required: false,
       trim: true,
-    },
-
-    releaseDate: {
-      type: Date,
-      required: false,
     },
 
     info: {

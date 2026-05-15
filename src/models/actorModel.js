@@ -28,6 +28,11 @@ const actorSchema = new mongoose.Schema(
       required: false,
       trim: true,
     },
+    imagePublicId: {
+      type: String,
+      required: false,
+      trim: true,
+    },
     gender: {
       type: String,
       enum: ['Male', 'Female', 'Other'],
@@ -39,7 +44,7 @@ const actorSchema = new mongoose.Schema(
       trim: true,
     },
     dayOfBirth: {
-      type: Date,
+      type: String,
       required: false,
     },
   },

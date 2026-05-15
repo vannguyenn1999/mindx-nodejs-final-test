@@ -111,12 +111,8 @@ const getProfile = async (req, res, next) => {
     }
     try {
       const decoded = jwt.verify(token, ENV.JWT_SECRET);
-
-      delete decoded.iat;
-      delete decoded.exp;
-      delete decoded.id;
-
-      res.status(200).json({ user: decoded }); // Trả về thông tin người dùng
+      const user = await UserModel.findById(decoded.id).select('email').select('name').select('role')
+      res.status(200).json({ user }); // Trả về thông tin người dùng
     } catch (error) {
       res.status(401).json({ message: 'Invalid token', error });
     }

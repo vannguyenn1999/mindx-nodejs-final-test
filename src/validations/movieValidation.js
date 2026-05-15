@@ -1,14 +1,14 @@
 import Joi from 'joi';
 import { StatusCodes } from 'http-status-codes';
 
-const actorValidation = (req, res, next) => {
+const movieValidation = (req, res, next) => {
   try {
     const schema = Joi.object({
-      name: Joi.string().min(2).max(50).required().strict(),
-      info: Joi.string().min(3).max(500).required().strict(),
-      gender: Joi.string().valid('Male', 'Female', 'Other').required(),
-      country: Joi.string().min(2).max(100).required().strict(),
-      // dayOfBirth: Joi.string()
+      title: Joi.string().min(2).max(50).required().strict(),
+      link: Joi.string().min(3).max(250).required().strict(),
+      info: Joi.string().min(3).max(250).required().strict(),
+      // imdbRating : Joi.number().min(1).max(10).required().strict()
+      
     });
     // if (!req.file) return res.status(400).json({ message: 'Vui lòng upload ảnh đại diện!' });
     const { error } = schema.validate(req.body);
@@ -24,6 +24,6 @@ const actorValidation = (req, res, next) => {
   }
 };
 
-export const ActorValidation = {
-  actorValidation,
+export const MovieValidation = {
+  movieValidation,
 };
