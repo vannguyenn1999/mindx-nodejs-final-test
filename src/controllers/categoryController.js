@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+
 import { slugify, randomStringSecure } from '~/utils/formartter';
 import CategoryModel from '~/models/categoryModel';
 import ApiError from '~/utils/ApiError';

@@ -53,13 +53,21 @@ const movieSchema = new mongoose.Schema(
     },
 
     releaseDate: {
-      type: Date,
+      type: String,
       required: false,
+      trim: true,
     },
     actors: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Actor',
+      },
+    ],
+
+    categories : [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
       },
     ],
 
