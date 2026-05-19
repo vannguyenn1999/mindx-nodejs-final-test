@@ -71,6 +71,13 @@ const movieSchema = new mongoose.Schema(
       },
     ],
 
+    topics : [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Topic',
+      },
+    ],
+
     country: {
       type: String,
       required: false,

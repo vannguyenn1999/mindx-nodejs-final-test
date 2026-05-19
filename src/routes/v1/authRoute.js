@@ -1,4 +1,5 @@
 import express from 'express';
+
 import { VALIDATIONS } from '~/validations/Validation';
 import { AuthController } from '~/controllers/authController';
 

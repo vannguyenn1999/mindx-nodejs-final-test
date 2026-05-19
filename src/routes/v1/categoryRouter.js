@@ -1,12 +1,14 @@
 import express from 'express';
 import { CategoryValidation } from '~/validations/categoryValidation.js';
 import { CategoryController } from '~/controllers/categoryController.js';
-import { AuthController } from '~/controllers/authController.js';
+// import { AuthController } from '~/controllers/authController.js';
+import {AuthMiddlewares} from '~/middlewares/auth'
+
 
 const CategoryRouter = express.Router();
 
 // Common middleware for admin operations
-const adminAuth = [AuthController.checkAuthorization, AuthController.checkAdmin];
+const adminAuth = [AuthMiddlewares.checkAuthorization, AuthMiddlewares.checkAdmin];
 
 // GET all categories and POST new category
 CategoryRouter.route('/')

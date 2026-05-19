@@ -2,12 +2,12 @@ import express from "express"
 
 import { MovieValidation } from '~/validations/movieValidation';
 import { MovieController } from '~/controllers/movieController';
-import { AuthController } from '~/controllers/authController.js';
+import {AuthMiddlewares} from '~/middlewares/auth'
 import { uploadMovieCloud } from '~/config/cloudinary.js';
 
 const MovieRouter = express.Router()
 
-const adminAuth = [AuthController.checkAuthorization, AuthController.checkAdmin];
+const adminAuth = [AuthMiddlewares.checkAuthorization, AuthMiddlewares.checkAdmin];
 
 MovieRouter.route('/')
   .get(MovieController.getAllMovies)

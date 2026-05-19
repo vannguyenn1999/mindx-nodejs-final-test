@@ -2,12 +2,13 @@ import express from 'express';
 
 import { ActorValidation } from '~/validations/actorValidation.js';
 import { ActorController } from '~/controllers/actorController.js';
-import { AuthController } from '~/controllers/authController.js';
+// import { AuthController } from '~/controllers/authController.js';
+import {AuthMiddlewares} from '~/middlewares/auth'
 import { uploadActorCloud } from '~/config/cloudinary.js';
 
 const ActorRouter = express.Router();
 
-const adminAuth = [AuthController.checkAuthorization, AuthController.checkAdmin];
+const adminAuth = [AuthMiddlewares.checkAuthorization, AuthMiddlewares.checkAdmin];
 
 ActorRouter.route('/')
   .get(ActorController.getAllActors)

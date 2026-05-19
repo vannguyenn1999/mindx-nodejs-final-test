@@ -12,7 +12,7 @@ const getAllMovies = async (req , res , next) => {
     const limit = parseInt(req.query.limit) || 5;
     const skip = (page - 1) * limit;
     const slug = slugify(search)
-    const movies = await MovieModel.find({slug : { $regex: slug, $options: 'i' }}).sort({ updatedAt: -1 }).skip(skip).limit(limit).populate('actors' , 'name image').populate('categories' , 'name');  
+    const movies = await MovieModel.find({slug : { $regex: slug, $options: 'i' }}).sort({ updatedAt: -1 }).skip(skip).limit(limit).populate('actors' , 'name image slug').populate('categories' , 'name').populate('topics' , 'name');  
     const totalMovies = await MovieModel.countDocuments();
     const totalPages = Math.ceil(totalMovies / limit);
     res.status(200).json({
@@ -33,7 +33,7 @@ const getAllMovies = async (req , res , next) => {
 const getMovieById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const movie = await MovieModel.findById(id).populate('actors' , 'name image slug').populate('categories' , 'name slug');    
+    const movie = await MovieModel.findById(id).populate('actors' , 'name image slug').populate('categories' , 'name slug').populate('topics' , 'name slug');    
     if (!movie) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Phim không tồn tại !');
     }
@@ -49,7 +49,7 @@ const getMovieById = async (req, res, next) => {
 
 const createMovie = async (req, res, next) => {
   try {
-    const {title, imdbRating , duration , info  , actors , country ,link , categories , releaseDate} = req.body;
+    const {title, imdbRating , duration , info  , actors , country ,link , categories , releaseDate , topics} = req.body;
     // Chuẩn bị dữ liệu để validate
     const bodyData = {
       title: title,
@@ -65,8 +65,8 @@ const createMovie = async (req, res, next) => {
       imageThumbPublicId : req.files['image_thumb'] ? req.files['image_thumb'][0].filename : null,
       slug: `${slugify(title)}-${randomStringSecure()}`,
       actors : JSON.parse(actors),
-      categories : JSON.parse(categories)
-
+      categories : JSON.parse(categories),
+      topics : JSON.parse(topics)
     };
 
     // Lưu vào MongoDB
@@ -121,7 +121,7 @@ const deleteMovie = async (req ,res , next) => {
 const updateMovie = async (req, res, next) => {
   try {
     const { id } = req.params
-    const {title, imdbRating , duration , info  , actors , country ,link , categories , releaseDate } = req.body;
+    const {title, imdbRating , duration , info  , actors , country ,link , categories , releaseDate , topics } = req.body;
     const movie = await MovieModel.findById(id).select('imageThumbPublicId').select('image_thumb').select('imagePublicId').select('image');
     if (!movie) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Phim không tồn tại !');
@@ -141,7 +141,8 @@ const updateMovie = async (req, res, next) => {
       imageThumbPublicId : req.files['image_thumb'] ? req.files['image_thumb'][0].filename : movie.imageThumbPublicId,
       slug: `${slugify(title)}-${randomStringSecure()}`,
       actors : JSON.parse(actors),
-      categories : JSON.parse(categories)
+      categories : JSON.parse(categories),
+      topics : JSON.parse(topics)
     }
     console.log("req.files['image_thumb']" , req.files['image_thumb'])
     if (req.files['image_thumb']) {
