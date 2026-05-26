@@ -1,20 +1,61 @@
 import {StatusCodes} from "http-status-codes"
+import mongoose from 'mongoose';
 
 import ApiError from '~/utils/ApiError'
 import { slugify, randomStringSecure } from '~/utils/formartter';
 import { cloudinary } from '~/config/cloudinary.js';
 import MovieModel from "~/models/movieModel"
+import CategoryModel from "~/models/categoryModel"
+import TopicModel from "~/models/topicModel"
 
 const getAllMovies = async (req , res , next) => {
   try {
     const search = req.query.search || ""
+    const categoryId = req.query.category || ""
+    const topicId = req.query.topic || ""
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.limit) || 30;
     const skip = (page - 1) * limit;
-    const slug = slugify(search)
-    const filter = search === "" ? {} : { slug: { $regex: slug, $options: 'i' } };
+    
+    // Build filter object
+    const filter = {};
+    
+    // Search by title/slug
+    if (search !== "") {
+      const slug = slugify(search)
+      filter.slug = { $regex: slug, $options: 'i' };
+    }
+    
+    // Filter by category
+    if (categoryId !== "") {
+      // Check if categoryId is a valid MongoDB ObjectId or slug
+      if (mongoose.Types.ObjectId.isValid(categoryId)) {
+        filter.categories = new mongoose.Types.ObjectId(categoryId);
+      } else {
+        // If not a valid ObjectId, try to find category by slug
+        const category = await CategoryModel.findOne({ slug: categoryId });
+        if (category) {
+          filter.categories = category._id;
+        }
+      }
+    }
+    
+    // Filter by topic
+    if (topicId !== "") {
+      // Check if topicId is a valid MongoDB ObjectId or slug
+      if (mongoose.Types.ObjectId.isValid(topicId)) {
+        filter.topics = new mongoose.Types.ObjectId(topicId);
+      } else {
+        // If not a valid ObjectId, try to find topic by slug
+        const topic = await TopicModel.findOne({ slug: topicId });
+        if (topic) {
+          filter.topics = topic._id;
+        }
+      }
+    }
+    
     const totalMovies = await MovieModel.countDocuments(filter);
-    const movies = await MovieModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(limit).populate('actors' , 'name image slug').populate('categories' , 'name').populate('topics' , 'name');  
+    const movies = await MovieModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(limit).populate('actors' , 'name image slug').populate('categories' , 'name slug').populate('topics' , 'name slug');  
     const totalPages = Math.ceil(totalMovies / limit);
     res.status(200).json({
       success: true,
