@@ -12,8 +12,9 @@ const getAllMovies = async (req , res , next) => {
     const limit = parseInt(req.query.limit) || 5;
     const skip = (page - 1) * limit;
     const slug = slugify(search)
-    const movies = await MovieModel.find({slug : { $regex: slug, $options: 'i' }}).sort({ updatedAt: -1 }).skip(skip).limit(limit).populate('actors' , 'name image slug').populate('categories' , 'name').populate('topics' , 'name');  
-    const totalMovies = await MovieModel.countDocuments();
+    const filter = search === "" ? {} : { slug: { $regex: slug, $options: 'i' } };
+    const totalMovies = await MovieModel.countDocuments(filter);
+    const movies = await MovieModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(limit).populate('actors' , 'name image slug').populate('categories' , 'name').populate('topics' , 'name');  
     const totalPages = Math.ceil(totalMovies / limit);
     res.status(200).json({
       success: true,

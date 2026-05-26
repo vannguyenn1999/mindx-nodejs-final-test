@@ -19,6 +19,9 @@ ActorRouter.route('/')
     ActorController.createActor,
   );
 
+ActorRouter.route('/slug/:slug')
+  .get(ActorController.getActorBySlug);
+
 ActorRouter.route('/:id')
   .get(ActorController.getActorById)
   .put(...adminAuth, uploadActorCloud.single('image'), ActorValidation.actorValidation, ActorController.updateActor)

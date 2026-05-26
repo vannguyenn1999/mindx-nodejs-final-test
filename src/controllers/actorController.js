@@ -4,7 +4,7 @@ import ApiError from '~/utils/ApiError'
 import { slugify, randomStringSecure } from '~/utils/formartter';
 import { cloudinary } from '~/config/cloudinary.js';
 import ActorModel from '~/models/actorModel.js';
-
+import MovieModel from '~/models/movieModel.js';
 
 const getAllActors = async (req, res, next) => {
   try {
@@ -46,6 +46,32 @@ const getActorById = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       success: true,
       data: actor,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getActorBySlug = async (req, res, next) => {
+  try {
+    const { slug } = req.params;
+    const actor = await ActorModel.findOne({ slug }).select('-imagePublicId');
+    if (!actor) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Diễn viên không tồn tại !');
+    }
+
+    const movies = await MovieModel.aggregate([
+      { $match: { actors: actor._id } },
+      { $sample: { size: 5 } },
+      { $project: { title: 1, slug: 1, image: 1 } },
+    ]);
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      data: {
+        actor,
+        movies,
+      },
     });
   } catch (error) {
     next(error);
@@ -150,5 +176,6 @@ export const ActorController = {
   createActor,
   deleteActor,
   updateActor,
-  getActorById
+  getActorById,
+  getActorBySlug,
 };
