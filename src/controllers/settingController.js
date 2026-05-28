@@ -22,7 +22,7 @@ const getAllBackground = async (req, res , next) => {
 const createBackground = async (req, res , next) => {
   try {
     const { movieId , name } = req.body;
-
+    console.log("movieId" , req.body)
     if (!movieId) {
       return res.status(400).json({ success: false, message: 'Thiếu movieId' });
     }

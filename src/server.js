@@ -10,11 +10,13 @@ const app = express();
 app.use(CORS);
 app.use(express.json());
 
+const PORT = ENV.PORT || 5000
+
 const START_SERVER = () => {
   app.use('/api/v1', API_V1);
   app.use(errorHandlingMiddleware);
 
-  app.listen(ENV.PORT, ENV.HOSTNAME, () => {
+  app.listen(ENV.PORT, '0.0.0.0', () => {
     console.log(`Hello Văn Nguyễn , I am running at ${ENV.HOSTNAME}:${ENV.PORT}/`);
   });
 };
