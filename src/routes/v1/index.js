@@ -11,6 +11,7 @@ import MovieRouter from '~/routes/v1/movieRouter'
 import StatisticalRouter from '~/routes/v1/statisticalRouter'
 import HistoryRouter from '~/routes/v1/historyRouter'
 import SettingRouter from '~/routes/v1/settingRouter';
+import CommentRouter from '~/routes/v1/commentRouter.js';
 
 const Router = express.Router();
 
@@ -25,6 +26,7 @@ Router.use('/categories', CategoryRouter);
 Router.use('/topics', TopicRouter);
 Router.use('/movies' , MovieRouter)
 Router.use('/actors', ActorRouter);
+Router.use('/comments', CommentRouter);
 
 
 export default Router;
